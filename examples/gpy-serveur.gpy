@@ -1,0 +1,51 @@
+#nom Gpy
+#categorie ACCUEIL
+#salonordre 1 reglement | type=texte
+#salonordre 2 annonces-officielles | type=texte
+#salonordre 3 nouveaux-arrivants | type=texte
+#salonordre 4 choix-des-roles | type=texte
+
+#categorie COMMUNAUTE
+#salonordre 1 discussion-generale | type=texte
+#salonordre 2 projets-et-reseautage | type=texte
+#salonordre 3 configurations-materiel | type=texte
+#salonordre 4 detente-et-humour | type=texte
+#salonordre 5 salon-principal | type=vocal | limite=0
+
+#categorie INTELLIGENCE ARTIFICIELLE
+#salonordre 1 actualites-ia | type=texte
+#salonordre 2 laboratoire-de-prompts | type=texte
+#salonordre 3 creations-ia | type=texte
+#salonordre 4 automatisation-et-agents | type=texte
+
+#categorie INFORMATIQUE
+#salonordre 1 hardware-et-composants | type=texte
+#salonordre 2 systemes-et-reseaux | type=texte
+#salonordre 3 langages-de-code | type=texte
+#salonordre 4 debogage-et-aide | type=texte
+
+#categorie GAMING
+#salonordre 1 actualites-jeux-video | type=texte
+#salonordre 2 recherche-de-groupe | type=texte
+#salonordre 3 esport-et-competitions | type=texte
+#salonordre 4 jeux-independants | type=texte
+#salonordre 5 equipe-alpha | type=vocal | limite=4
+#salonordre 6 equipe-beta | type=vocal | limite=4
+
+#categorie SUPPORT
+#salonordre 1 aide-et-tickets | type=texte
+#salonordre 2 logs-moderation | type=texte
+
+#role Fondateur | couleur=#6C5CE7
+#role Administrateur | couleur=#E74C3C
+#role Moderateur | couleur=#3498DB
+#role Support | couleur=#00D2D3
+#role Donateur Premium | couleur=#FD79A8
+#role Partenaire | couleur=#2ECC71
+#role Specialiste IA | couleur=#F1C40F
+#role Developpeur | couleur=#55EFC4
+#role Expert Materiel | couleur=#E67E22
+#role Chasseur de Bugs | couleur=#FAB1A0
+#role Joueur Competitif | couleur=#9B59B6
+#role Joueur Loisirs | couleur=#A29BFE
+#role Membre Verifie | couleur=#F5F6FA

@@ -10,12 +10,12 @@ const timestamp = "1720000000";
 const body = Buffer.from("{\"type\":1}");
 const signature = sign(null, Buffer.concat([Buffer.from(timestamp), body]), privateKey).toString("hex");
 
-test("accepts a correctly signed, recent Discord request", () => {
+test("accepts a correctly signed recent Discord request", () => {
   assert.equal(verifyDiscordRequest({ timestamp, signature, body, publicKey, nowSeconds: Number(timestamp) }), true);
 });
 
-test("rejects a modified body and an expired request", () => {
-  assert.equal(verifyDiscordRequest({ timestamp, signature, body: Buffer.from("tampered"), publicKey, nowSeconds: Number(timestamp) }), false);
+test("rejects a changed body and an expired request", () => {
+  assert.equal(verifyDiscordRequest({ timestamp, signature, body: Buffer.from("changed"), publicKey, nowSeconds: Number(timestamp) }), false);
   assert.equal(verifyDiscordRequest({ timestamp, signature, body, publicKey, nowSeconds: Number(timestamp) + 301 }), false);
 });
 

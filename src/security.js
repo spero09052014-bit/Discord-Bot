@@ -8,7 +8,6 @@ export function loadDiscordPublicKey(publicKeyHex) {
   if (typeof publicKeyHex !== "string" || !HEX_32_BYTES.test(publicKeyHex)) {
     throw new Error("DISCORD_PUBLIC_KEY must be a 32-byte hexadecimal key.");
   }
-
   return createPublicKey({
     key: Buffer.concat([ED25519_SPKI_PREFIX, Buffer.from(publicKeyHex, "hex")]),
     format: "der",
@@ -16,16 +15,25 @@ export function loadDiscordPublicKey(publicKeyHex) {
   });
 }
 
-export function verifyDiscordRequest({ timestamp, signature, body, publicKey, nowSeconds = Math.floor(Date.now() / 1000), maxAgeSeconds = 300 }) {
+export function verifyDiscordRequest({
+  timestamp,
+  signature,
+  body,
+  publicKey,
+  nowSeconds = Math.floor(Date.now() / 1000),
+  maxAgeSeconds = 300
+}) {
   if (typeof timestamp !== "string" || !/^\d+$/.test(timestamp)) return false;
   if (typeof signature !== "string" || !HEX_64_BYTES.test(signature)) return false;
-
   const signedAt = Number(timestamp);
   if (!Number.isSafeInteger(signedAt) || Math.abs(nowSeconds - signedAt) > maxAgeSeconds) return false;
-
   try {
-    const signedMessage = Buffer.concat([Buffer.from(timestamp, "utf8"), body]);
-    return verify(null, signedMessage, publicKey, Buffer.from(signature, "hex"));
+    return verify(
+      null,
+      Buffer.concat([Buffer.from(timestamp, "utf8"), body]),
+      publicKey,
+      Buffer.from(signature, "hex")
+    );
   } catch {
     return false;
   }

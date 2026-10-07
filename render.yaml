@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: discord-slash-bot
+    name: gpy-discord-bot
     runtime: node
     plan: free
     buildCommand: npm install --omit=dev
@@ -12,4 +12,6 @@ services:
       - key: DISCORD_APPLICATION_ID
         sync: false
       - key: DISCORD_PUBLIC_KEY
+        sync: false
+      - key: DISCORD_BOT_TOKEN
         sync: false

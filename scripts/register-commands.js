@@ -1,41 +1,34 @@
 import { COMMANDS } from "../src/commands.js";
 
-const APPLICATION_ID = process.env.DISCORD_APPLICATION_ID;
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-const GUILD_ID = process.env.DISCORD_GUILD_ID;
+const applicationId = process.env.DISCORD_APPLICATION_ID;
+const token = process.env.DISCORD_BOT_TOKEN;
+const guildId = process.env.DISCORD_GUILD_ID;
 
-if (!APPLICATION_ID || !/^\d+$/.test(APPLICATION_ID)) {
-  throw new Error("Set DISCORD_APPLICATION_ID to the Discord application ID.");
+if (!applicationId || !/^\d+$/.test(applicationId)) {
+  throw new Error("Configure DISCORD_APPLICATION_ID avant d'enregistrer les commandes.");
 }
-if (!BOT_TOKEN) {
-  throw new Error("Set DISCORD_BOT_TOKEN before registering slash commands.");
-}
-if (GUILD_ID && !/^\d+$/.test(GUILD_ID)) {
-  throw new Error("DISCORD_GUILD_ID must contain only digits.");
-}
+if (!token) throw new Error("Configure DISCORD_BOT_TOKEN avant d'enregistrer les commandes.");
+if (guildId && !/^\d+$/.test(guildId)) throw new Error("DISCORD_GUILD_ID doit être un ID numérique.");
 
-const route = GUILD_ID
-  ? "applications/" + APPLICATION_ID + "/guilds/" + GUILD_ID + "/commands"
-  : "applications/" + APPLICATION_ID + "/commands";
+const endpoint = guildId
+  ? "https://discord.com/api/v10/applications/" + applicationId + "/guilds/" + guildId + "/commands"
+  : "https://discord.com/api/v10/applications/" + applicationId + "/commands";
 
-try {
-  const response = await fetch("https://discord.com/api/v10/" + route, {
-    method: "PUT",
-    headers: {
-      authorization: "Bot " + BOT_TOKEN,
-      "content-type": "application/json"
-    },
-    body: JSON.stringify(COMMANDS)
-  });
-
-  if (!response.ok) {
-    const detail = (await response.text()).slice(0, 500);
-    console.error("Discord rejected command registration (HTTP " + response.status + "): " + detail);
-    process.exitCode = 1;
-  } else {
-    console.log("Registered " + COMMANDS.length + " slash commands " + (GUILD_ID ? "for test guild " + GUILD_ID : "globally") + ".");
-  }
-} catch (error) {
-  console.error("Could not reach the Discord API:", error.message);
+const response = await fetch(endpoint, {
+  method: "PUT",
+  headers: {
+    authorization: "Bot " + token,
+    "content-type": "application/json"
+  },
+  body: JSON.stringify(COMMANDS)
+});
+const text = await response.text();
+if (!response.ok) {
+  console.error("Discord a refusé les commandes (HTTP " + response.status + ") : " + text.slice(0, 1000));
   process.exitCode = 1;
+} else {
+  console.log(
+    COMMANDS.length + " commandes Gpy enregistrées " +
+    (guildId ? "pour le serveur de test " + guildId : "globalement") + "."
+  );
 }

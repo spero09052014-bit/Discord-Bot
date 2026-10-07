@@ -1,23 +1,27 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildInteractionResponse, COMMANDS } from "../src/commands.js";
+import { COMMANDS, hasPermission, optionValue, PERMISSIONS, subcommand } from "../src/commands.js";
 
-test("registers the starter slash commands", () => {
-  assert.deepEqual(COMMANDS.map((command) => command.name), ["ping", "help"]);
+test("registers Gpy code, moderation and ticket commands", () => {
+  const names = COMMANDS.map((command) => command.name);
+  assert.ok(names.includes("gpy-prompt"));
+  assert.ok(names.includes("code"));
+  assert.ok(names.includes("gpy-import"));
+  assert.ok(names.includes("mod"));
+  assert.ok(names.includes("ticket"));
 });
 
-test("answers Discord PING with PONG", () => {
-  assert.deepEqual(buildInteractionResponse({ type: 1 }), { type: 1 });
+test("permission checks accept the exact permission or administrator", () => {
+  assert.equal(hasPermission({ member: { permissions: String(PERMISSIONS.BAN_MEMBERS) } }, PERMISSIONS.BAN_MEMBERS), true);
+  assert.equal(hasPermission({ member: { permissions: String(PERMISSIONS.KICK_MEMBERS) } }, PERMISSIONS.BAN_MEMBERS), false);
+  assert.equal(hasPermission({ member: { permissions: String(PERMISSIONS.ADMINISTRATOR) } }, PERMISSIONS.MANAGE_ROLES), true);
 });
 
-test("answers /ping privately", () => {
-  assert.deepEqual(buildInteractionResponse({ type: 2, data: { name: "ping" } }), {
-    type: 4,
-    data: { content: "Pong ! 🏓", flags: 64 }
-  });
+test("reads a slash subcommand", () => {
+  assert.equal(subcommand({ data: { options: [{ name: "ban" }] } }), "ban");
 });
 
-test("answers /help and unknown commands privately", () => {
-  assert.match(buildInteractionResponse({ type: 2, data: { name: "help" } }).data.content, /\/ping/);
-  assert.equal(buildInteractionResponse({ type: 2, data: { name: "other" } }).data.flags, 64);
+test("reads both direct attachment options and nested moderation options", () => {
+  assert.equal(optionValue({ data: { options: [{ name: "fichier", value: "attachment-id" }] } }, "fichier"), "attachment-id");
+  assert.equal(optionValue({ data: { options: [{ name: "ban", options: [{ name: "raison", value: "spam" }] }] } }, "raison"), "spam");
 });
